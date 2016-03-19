@@ -1,7 +1,10 @@
 """ A program that stores and updates a counter using a Python pickle file"""
 
-from os.path import exists
+from os.path import exists 
+#Return True if path refers to an existing path. 
+#Returns False for broken symbolic links. 
 import sys
+import pickle
 from pickle import dump, load
 
 def update_counter(file_name, reset=False):
@@ -29,11 +32,35 @@ def update_counter(file_name, reset=False):
 	>>> update_counter('blah2.txt')
 	2
 	"""
-	pass
 
-if __name__ == '__main__':
-	if len(sys.argv) < 2:
-		import doctest
-		doctest.testmod()
-	else:
-		print "new value is " + str(update_counter(sys.argv[1]))
+
+	if exists(file_name) == False or reset == True: # if file dne or reset = True
+		f = open(file_name,'w') # f is now a file object ready to be written
+		counter = 1
+		pickle.load(f)
+		f.write(str(counter)) # writes counter to file
+		f.close()
+		pickle.dump()
+		print 
+
+	elif exists(file_name) and reset == False: # if file exist and reset = False add one to counter
+		counter += 1 # adds 1 to pre-existing counter
+		f = open(file_name,'r+') # f is now a file object ready to be read
+		content = pickle.load(f) # load instead of dump as f already exists
+		f.seek(0,0) # moves pointer to start of file to write over previous content
+		f.write(str(counter)) # writes counter to file
+		f.close()
+
+		
+	
+
+update_counter("blah.txt")
+		
+# if __name__ == '__main__':
+# 	if len(sys.argv) < 2:
+# 		import doctest
+# 		doctest.testmod()
+# 	else:
+# 		print "new value is " + str(update_counter(sys.argv[1])) # catches name variable 
+
+
